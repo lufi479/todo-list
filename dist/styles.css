@@ -55,10 +55,6 @@ body{
     grid-column: 2/ 3;
 }
 
-.hidden {
-    display: none;
-}
-
 .shown{
     display: block;
 }
@@ -78,6 +74,7 @@ body{
     font-size: 1.5rem;
     overflow: hidden;
     text-overflow: ellipsis;
+    pointer-events: none;
 }
 
 .project-buttons-container{
@@ -129,4 +126,8 @@ body{
     width: 95%;
     margin: 5px;
     padding: 0px;
+}
+
+.hidden {
+    display: none;
 }
