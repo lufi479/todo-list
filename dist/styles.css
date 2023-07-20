@@ -1,0 +1,132 @@
+:root{
+    --primary-color: rgb(142, 77, 255);
+    --secondary: white;
+    --projects-background: rgb(245, 245, 245);
+}
+
+*{
+    font-size: 16px;
+}
+
+html, body{
+    height: 100%;
+}
+
+body{
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.header>.title{
+    font-size: 3rem;
+}
+
+.header{
+    margin: 10px;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    height: 100%;
+}
+
+.project-section{
+    grid-column: 1/ 2;
+    background-color: var(--projects-background);
+    max-width: 20vw;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.project-header{
+    font-size: 2rem;
+    margin: 10px;
+    text-align: center;
+    padding: 5px;
+    border-bottom: 2px solid black;
+}
+
+.task-container{
+    grid-column: 2/ 3;
+}
+
+.hidden {
+    display: none;
+}
+
+.shown{
+    display: block;
+}
+
+.project{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding:5px;
+    border-radius: 5px;
+    background-color: var(--secondary);
+    border: 1px solid rgb(235, 235, 235);
+}
+
+.project-name{
+    font-size: 1.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-buttons-container{
+    display: flex;
+    gap: 5px;
+}
+
+.edit-project{
+    background-image: url(../dist/imgs/square-edit-outline.png);
+    height:25px;
+    width: 25px;
+    background-size: 25px;
+    background-position: 50% 50%;
+    cursor: pointer;
+}
+
+.delete-project{
+    background: url(../dist/imgs/trash-can-outline.png);
+    height:25px;
+    width: 25px;
+    background-size: 25px;
+    cursor: pointer;
+}
+
+.selected-project{
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.create-proj-container{
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}
+
+#create-project {
+    margin: 10px 20px;
+}
+
+.project-form{
+    /*border: 2px solid black;*/
+    width: 90%;
+    /*display: flex;*/
+    background-color: var(--primary-color);
+    padding: 5px;
+}
+
+#proj-name{
+    width: 95%;
+    margin: 5px;
+    padding: 0px;
+}
