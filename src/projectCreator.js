@@ -1,6 +1,7 @@
 import createTask from "./taskCreator";
 
 const projectFactory = (name) => {
+    let id = 0;
     const taskList = [];
 
     const addTask = (task) => {
@@ -9,6 +10,7 @@ const projectFactory = (name) => {
 
     return {
         name,
+        id,
         taskList,
         addTask
     };
