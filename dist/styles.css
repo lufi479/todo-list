@@ -53,6 +53,29 @@ body{
 
 .task-container{
     grid-column: 2/ 3;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+}
+
+.task{
+    background-color: azure;
+    padding: 5px;
+    margin:10px;
+}
+
+.task-btn-container{
+    margin: 10px;
+}
+
+.create-task-btn{
+    font-size: 1.5rem;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .shown{
@@ -126,6 +149,40 @@ body{
     width: 95%;
     margin: 5px;
     padding: 0px;
+}
+
+.disable-other-clicks{
+    position: fixed;
+    top:0;
+    right:0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.new-task-form{
+    background-color: aquamarine;
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1.25rem;
+}
+
+.new-task-form-header{
+    font-size: 2.5rem;
+    border-bottom: 2px solid black;
+    text-align: center;
+}
+
+.new-task-form input, .new-task-form label{
+    display: block;
+    font-size: 1.5rem;
+}
+
+.task-form-btns-container{
+    display: flex;
+    margin-top: 10px;
 }
 
 .hidden {
