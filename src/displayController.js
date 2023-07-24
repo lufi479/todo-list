@@ -1,5 +1,6 @@
 import createTask from "./taskCreator";
 import createProject from "./projectCreator";
+import { format } from "date-fns";
 
 function start(){
 
@@ -79,7 +80,7 @@ function start(){
             projBtnsContainterDiv.classList.add("project-buttons-container");
 
             let editDiv = document.createElement("div");
-            editDiv.classList.add("edit-project");
+            editDiv.classList.add("edit", "edit-project");
             projBtnsContainterDiv.appendChild(editDiv);
 
             let deleteDiv = document.createElement("div");
@@ -277,13 +278,50 @@ function start(){
             let priorityDiv = document.createElement("div");
             priorityDiv.classList.add("task-priority");
             priorityDiv.textContent = taskList[i].priority;
+            if (taskList[i].priority === "Low"){
+                priorityDiv.classList.add("low-priority");
+                priorityDiv.textContent = "low";
+            }
+            else if (taskList[i].priority === "Medium"){
+                priorityDiv.classList.add("medium-priority");
+                priorityDiv.textContent = "med";
+            }
+            else{
+                priorityDiv.classList.add("high-priority");
+                priorityDiv.textContent = "high";
+            }
+
+            let editDiv = document.createElement("div");
+            editDiv.classList.add("edit", "edit-task");
+
+            editDiv.addEventListener("click", function(e){
+                let editTaskHeader = document.createElement("div");
+                editTaskHeader.classList.add("edit-task-form-header");
+                editTaskHeader.textContent = "Edit Task";
+                taskFormFunction(taskList[i]);
+                let form = document.querySelector(".new-task-form");
+                form.insertBefore(editTaskHeader, form.firstChild);
+                document.querySelector(".new-task-title-input").value = taskList[i].title;
+                document.querySelector(".new-task-desc-input").value = taskList[i].desc;
+                document.querySelector(".new-task-due-date-input").value = taskList[i].dueDate;
+                document.querySelector("#submit-new-task").textContent = "Change";
+            });
+
+            let beginDiv = document.createElement("div");
+            beginDiv.classList.add("begin");
+            beginDiv.appendChild(completionCheckDiv);
+            beginDiv.appendChild(titleDiv);
+
+            let endDiv = document.createElement("div");
+            endDiv.classList.add("end");
+            endDiv.appendChild(dateDiv);
+            endDiv.appendChild(priorityDiv);
+            endDiv.appendChild(editDiv);
 
             let mainInfoDiv = document.createElement("div");
             mainInfoDiv.classList.add("task-main-info");
-            mainInfoDiv.appendChild(completionCheckDiv);
-            mainInfoDiv.appendChild(titleDiv);
-            mainInfoDiv.appendChild(dateDiv);
-            mainInfoDiv.appendChild(priorityDiv);
+            mainInfoDiv.appendChild(beginDiv);
+            mainInfoDiv.appendChild(endDiv);
 
             let descDiv = document.createElement("div");
             descDiv.classList.add("task-desc");
@@ -291,6 +329,8 @@ function start(){
 
             taskDiv.appendChild(mainInfoDiv);
             taskDiv.appendChild(descDiv);
+
+            taskDiv.dataset.id = i;
 
             taskContainer.appendChild(taskDiv);
         }
@@ -307,33 +347,47 @@ function start(){
         taskContainer.appendChild(taskButtonContainer);
 
         createTaskBtn.addEventListener("click", function(e){
-            let disableClicks = document.createElement("div");
-            disableClicks.classList.add("disable-other-clicks");
-            let newTaskForm = createNewTaskForm();
             let newTaskHeader = document.createElement("div");
             newTaskHeader.classList.add("new-task-form-header");
             newTaskHeader.textContent = "New Task";
-            newTaskForm.insertBefore(newTaskHeader, newTaskForm.firstChild);
-            disableClicks.appendChild(newTaskForm);
-            //taskContainer.appendChild(createNewTaskForm());
-            document.querySelector("body").appendChild(disableClicks);
+            taskFormFunction();
+            let form = document.querySelector(".new-task-form");
+            form.insertBefore(newTaskHeader, form.firstChild);
+            
+        });
+    }
 
-            document.querySelector(".new-task-form").addEventListener("submit", function(e){
-                e.preventDefault();
-                let formData = new FormData(this);
-                let titleInput = formData.get("task-title");
-                let descInput = formData.get("task-desc");
-                let priorityInput = formData.get("task-priority");
-                let dateInput = formData.get("task-due-date");
+    function taskFormFunction(task = undefined){
+        let disableClicks = document.createElement("div");
+        disableClicks.classList.add("disable-other-clicks");
+        let newTaskForm = createNewTaskForm();
+        disableClicks.appendChild(newTaskForm);
+        //taskContainer.appendChild(createNewTaskForm());
+        document.querySelector("body").appendChild(disableClicks);
+
+        document.querySelector(".new-task-form").addEventListener("submit", function(e){
+            e.preventDefault();
+            let formData = new FormData(this);
+            let titleInput = formData.get("task-title");
+            let descInput = formData.get("task-desc");
+            let priorityInput = formData.get("task-priority");
+            let dateInput = new Date(formData.get("task-due-date"));
+            if (task === undefined){
                 let currentProject = document.querySelector(".selected-project");
-                projectList[currentProject.dataset.id].addTask(createTask(titleInput, descInput, priorityInput, dateInput));
-                removeTaskForm();
-                displayTasks();
-            });
-    
-            document.querySelector("#cancel-new-task").addEventListener("click", function(e){
-                removeTaskForm();
-            })
+                projectList[currentProject.dataset.id].addTask(createTask(titleInput, descInput, dateInput, priorityInput));
+            }
+            else{
+                task.title = titleInput;
+                task.desc = descInput;
+                task.priority = priorityInput;
+                task.dueDate = format(dateInput, 'yyyy-MM-dd');
+            }
+            removeTaskForm();
+            displayTasks();
+        });
+
+        document.querySelector("#cancel-new-task").addEventListener("click", function(e){
+            removeTaskForm();
         });
     }
 
@@ -355,6 +409,7 @@ function start(){
         taskTitle.type = "text";
         taskTitle.id = "task-title";
         taskTitle.name = "task-title";
+        taskTitle.required = true;
 
         let descLabel = document.createElement("label");
         descLabel.for = "task-desc";
@@ -364,6 +419,7 @@ function start(){
         taskDesc.classList.add("new-task-desc-input");
         taskDesc.id = "task-desc";
         taskDesc.name = "task-desc";
+        taskDesc.required = true;
 
         let priorityLabel = document.createElement("label");
         priorityLabel.for = "task-priority";
@@ -394,6 +450,7 @@ function start(){
         taskDueDate.type = "date";
         taskDueDate.id = "task-due-date";
         taskDueDate.name = "task-due-date";
+        taskDueDate.required = true;
 
         let submitNewTask = document.createElement("button");
         submitNewTask.id ="submit-new-task";
