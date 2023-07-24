@@ -1,10 +1,7 @@
+import { format } from 'date-fns'
+
 const taskFactory = (title, desc, dueDate, priority) => {
     let completed = false;
-
-    const changeCompletedStatus = () => {
-        completed = completed ? false : true;
-        return completed;
-    }
 
     return{
         title,
@@ -12,12 +9,11 @@ const taskFactory = (title, desc, dueDate, priority) => {
         dueDate,
         priority,
         completed,
-        changeCompletedStatus
     }
 };
 
 function createTask(title, desc, dueDate, priority) {
-    const task = taskFactory(title, desc, dueDate, priority);
+    const task = taskFactory(title, desc, format(dueDate, 'yyyy-MM-dd'), priority);
     return task;
 }
 
