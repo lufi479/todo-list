@@ -13,6 +13,7 @@ const taskFactory = (title, desc, dueDate, priority) => {
 };
 
 function createTask(title, desc, dueDate, priority) {
+
     const task = taskFactory(title, desc, format(dueDate, 'yyyy-MM-dd'), priority);
     return task;
 }
