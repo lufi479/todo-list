@@ -252,7 +252,45 @@ function start(){
             titleDiv.classList.add("task-title");
             titleDiv.textContent = taskList[i].title;
 
-            taskDiv.appendChild(titleDiv);
+            let completionCheckDiv = document.createElement("div");
+            completionCheckDiv.classList.add("checkbox");
+            if (taskList[i].completed){
+                completionCheckDiv.classList.add("completed");
+            }
+
+            completionCheckDiv.addEventListener("click", function(e){
+                //taskList[i].changeCompletedStatus();
+                taskList[i].completed = !taskList[i].completed;
+                if (taskList[i].completed){
+                    
+                    completionCheckDiv.classList.add("completed");
+                }
+                else{
+                    completionCheckDiv.classList.remove("completed");
+                }
+            });
+
+            let dateDiv = document.createElement("div");
+            dateDiv.classList.add("task-date");
+            dateDiv.textContent = taskList[i].dueDate;
+
+            let priorityDiv = document.createElement("div");
+            priorityDiv.classList.add("task-priority");
+            priorityDiv.textContent = taskList[i].priority;
+
+            let mainInfoDiv = document.createElement("div");
+            mainInfoDiv.classList.add("task-main-info");
+            mainInfoDiv.appendChild(completionCheckDiv);
+            mainInfoDiv.appendChild(titleDiv);
+            mainInfoDiv.appendChild(dateDiv);
+            mainInfoDiv.appendChild(priorityDiv);
+
+            let descDiv = document.createElement("div");
+            descDiv.classList.add("task-desc");
+            descDiv.textContent = taskList[i].desc
+
+            taskDiv.appendChild(mainInfoDiv);
+            taskDiv.appendChild(descDiv);
 
             taskContainer.appendChild(taskDiv);
         }
