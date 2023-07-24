@@ -292,7 +292,7 @@ function start(){
             }
 
             let editDiv = document.createElement("div");
-            editDiv.classList.add("edit", "edit-task");
+            editDiv.classList.add("edit-task");
 
             editDiv.addEventListener("click", function(e){
                 let editTaskHeader = document.createElement("div");
@@ -307,6 +307,14 @@ function start(){
                 document.querySelector("#submit-new-task").textContent = "Change";
             });
 
+            let deleteDiv = document.createElement("div");
+            deleteDiv.classList.add("delete-task");
+
+            deleteDiv.addEventListener("click", function(e){
+                taskList.splice(i, 1);
+                displayTasks();
+            });
+
             let beginDiv = document.createElement("div");
             beginDiv.classList.add("begin");
             beginDiv.appendChild(completionCheckDiv);
@@ -317,6 +325,7 @@ function start(){
             endDiv.appendChild(dateDiv);
             endDiv.appendChild(priorityDiv);
             endDiv.appendChild(editDiv);
+            endDiv.appendChild(deleteDiv);
 
             let mainInfoDiv = document.createElement("div");
             mainInfoDiv.classList.add("task-main-info");
