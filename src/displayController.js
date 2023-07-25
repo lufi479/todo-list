@@ -395,7 +395,8 @@ function start(){
             let titleInput = formData.get("task-title");
             let descInput = formData.get("task-desc");
             let priorityInput = formData.get("task-priority");
-            let dateInput = new Date(formData.get("task-due-date"));
+            let formDate = formData.get("task-due-date");
+            let dateInput = new Date(formDate.replaceAll("-", "/"))
             if (task === undefined){
                 let currentProject = document.querySelector(".selected-project");
                 projectList[currentProject.dataset.id].addTask(createTask(titleInput, descInput, dateInput, priorityInput));
