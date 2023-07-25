@@ -1,12 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
 :root{
-    --primary-color: rgb(142, 77, 255);
+    /*--primary-color: rgb(142, 77, 255);*/
+    --primary-color: rgb(253, 171, 235);
     --secondary: white;
+    --main-text: black;
     --projects-background: rgb(245, 245, 245);
     --disable-background: rgba(255,255,255,0.8);
 }
 
 *{
     font-size: 16px;
+    font-family: 'Rubik', sans-serif;
 }
 
 html, body{
@@ -24,7 +29,8 @@ body{
 }
 
 .header{
-    margin: 10px;
+    padding: 10px;
+    background-color: var(--primary-color);
 }
 
 .container{
@@ -57,13 +63,15 @@ body{
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 20px;
+    padding: 20px 50px;
 }
 
 .task{
-    background-color: azure;
+    /*background-color: azure;*/
     padding: 5px;
     margin:10px;
+    box-shadow: 0px 3px 3px lightgrey;
+
 }
 
 .task-main-info{
@@ -81,14 +89,32 @@ body{
     font-size: 1.5rem;
 }
 
+.task-title{
+    max-width: 850px;
+}
+
+.task-desc{
+    margin-top: 5px;
+    max-width: 1100px;
+}
+
+.task-title, .task-desc{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .task-priority{
     border: 1px solid black;
     padding: 3px;
     border-radius: 10%;
+    font-weight: bold;
+    min-width: 50px;
+    text-align: center;
 }
 
 .high-priority{
-    background-color: red;
+    background-color: rgb(255, 87, 87);
 }
 
 .medium-priority{
@@ -104,12 +130,15 @@ body{
 }
 
 .create-task-btn{
-    font-size: 1.5rem;
+    font-size: 2rem;
     border-radius: 50%;
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 3rem;
+    width: 3rem;
     box-sizing: border-box;
     text-align: center;
+    background-color: var(--primary-color);
+    border: 1px solid rgb(235, 235, 235);
+    cursor: pointer;
 }
 
 .checkbox{
@@ -118,6 +147,7 @@ body{
     border-radius: 50%;
     border: 1px solid black;
     background-color: white;
+    cursor: pointer;
 }
 
 .completed{
@@ -174,7 +204,7 @@ body{
 
 .selected-project{
     background-color: var(--primary-color);
-    color: white;
+    color: var(--main-text);
 }
 
 .create-proj-container{
@@ -185,6 +215,13 @@ body{
 
 #create-project {
     margin: 10px 20px;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: var(--primary-color);
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .project-form{
@@ -193,12 +230,26 @@ body{
     /*display: flex;*/
     background-color: var(--primary-color);
     padding: 5px;
+    margin: 10px;
+}
+
+#submit-proj-form, #cancel-new-project, 
+.task-form-btns-container button,
+#submit-change-name, #cancel-change-name{
+    margin: 0px 5px;
+    border: none;
+    border-radius: 10px;
+    padding: 3px 10px;
+    background-color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 
 #proj-name{
     width: 95%;
     margin: 5px;
     padding: 0px;
+    font-size: 1.5rem;
 }
 
 .disable-other-clicks{
@@ -212,21 +263,23 @@ body{
 }
 
 .new-task-form{
-    background-color: aquamarine;
+    background-color: var(--primary-color);
     position:fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 1.25rem;
+    border-radius: 10px;
+    border: 2px solid black;
 }
 
-.new-task-form-header{
+.new-task-form-header, .edit-task-form-header{
     font-size: 2.5rem;
     border-bottom: 2px solid black;
     text-align: center;
 }
 
-.new-task-form input, .new-task-form label{
+.new-task-form input, .new-task-form label, .new-task-form select{
     display: block;
     font-size: 1.5rem;
 }
@@ -236,6 +289,15 @@ body{
     margin-top: 10px;
 }
 
+.new-task-desc-input{
+    width: 313px;
+    height: 140px;
+}
+
 .hidden {
     display: none;
+}
+
+.project:hover{
+    box-shadow: 0px 0px 5px lightgray inset;
 }
