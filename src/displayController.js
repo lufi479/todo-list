@@ -4,21 +4,30 @@ import { format } from "date-fns";
 
 function start(){
 
-    const projectList = [];
+    let projectList = [];
 
 
-    const task1 = createTask("title", "Description", new Date(2023, 7, 1), "low");
+    // Checks if localStorage exists and does the necessary tasks depending
+    // on the result
+    if (localStorage.getItem('data') === null){
+        const task1 = createTask("title", "Description", new Date(2023, 7, 1), "Low");
+        const proj1 = createProject("project 1");
+        projectList.push(proj1);
+        proj1.addTask(task1);
+    }
+    else{
+        const dataStorage = JSON.parse(localStorage.getItem('data'));
+        for (let i = 0; i < dataStorage.length; i++){
+            let tempProj = createProject(dataStorage[i].name);
+            for (let j = 0; j < dataStorage[i].taskList.length; j++){
+                tempProj.addTask(dataStorage[i].taskList[j]);
+            }
+            projectList.push(tempProj);
+        }
+    }
 
-    task1.desc = "LMAO NEW DESCRIPTION";
-
-    const proj1 = createProject("project 1");
-    projectList.push(proj1);
-    proj1.addTask(task1);
-
-    proj1.addTask(createTask("Task2", "Desc 2", new Date(2023,7,7), "high"));
-
-    const containerDiv = document.querySelector(".container");
-
+    //Creates the button for creating a new project and the form that 
+    // the user inputs
     const createProjectBtn = document.querySelector("#create-project");
 
     const projForm = document.createElement("form");
@@ -29,8 +38,6 @@ function start(){
     enterName.type = "text";
     enterName.id = "proj-name";
     enterName.name = "proj-name";
-
-
 
     const submitProj = document.createElement("button");
     submitProj.type = "submit";
@@ -54,19 +61,42 @@ function start(){
 
     createProjectBtn.addEventListener("click", function(e) {
         projForm.classList.remove("hidden");
-        //projForm.classList.add("shown");
         createProjectBtn.classList.add("hidden")
-    })
+    });
+
+    projForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        let nameInput = formData.get("proj-name");
+        let tempProj = createProject(nameInput);
+        projectList.push(tempProj);
+        closeForm();
+        display();
+    });
+
+    cancelProj.addEventListener("click", function (e){
+        closeForm();
+    });
+
+    function closeForm() {
+        projForm.classList.remove("shown");
+        projForm.classList.add("hidden");
+        projForm.reset();
+        createProjectBtn.classList.remove("hidden");
+    }
+
+
 
     function display(){
         displayProjects();
         displayTasks();
     }
 
+    //Displays all of the projects on the projects list
     function displayProjects() {
+        localStorage.setItem('data', JSON.stringify(projectList));
         const projListDiv = document.querySelector(".project-list");
         projListDiv.textContent = "";
-        console.log(projectList);
         for (let i = 0; i < projectList.length; i++){
             let card = document.createElement("div");
             card.classList.add("project");
@@ -101,43 +131,20 @@ function start(){
         }
     };
 
-    projForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        let formData = new FormData(this);
-        let nameInput = formData.get("proj-name");
-        let tempProj = createProject(nameInput);
-        projectList.push(tempProj);
-        closeForm();
-        display();
-    });
-
-    cancelProj.addEventListener("click", function (e){
-        closeForm();
-    });
-
-    function closeForm() {
-        projForm.classList.remove("shown");
-        projForm.classList.add("hidden");
-        projForm.reset();
-        createProjectBtn.classList.remove("hidden");
-    }
-
-    display();
-
+    //Checks which part of the project you clicked and calls the necessary function;
     function carryOutProjectEvent(e){
         if (e.target.closest(".edit-project")){
-            console.log("edit");
             editProject(e);
         }
         else if (e.target.closest(".delete-project")){
             deleteProject(e);
         }
         else if (e.target.closest(".project") || e.target.closest(".project-name")){
-            console.log("lol");
             selectProject(e);
         }
         
     }
+
 
     function deleteProject(e){
         let selectedProject = e.currentTarget;
@@ -149,7 +156,6 @@ function start(){
     function editProject(e){
         let selectedProject = e.currentTarget;
         let id = selectedProject.dataset.id;
-        //selectedProject.classList.add("hidden");
 
         selectedProject.removeEventListener("click", carryOutProjectEvent);
 
@@ -167,6 +173,7 @@ function start(){
 
         
     }
+
 
     function createChangeForm(id){
         const changeForm = document.createElement("form");
@@ -196,6 +203,7 @@ function start(){
         return changeForm;
     }
 
+    // Performs the functionality on the form that changes the project's name
     function addChangeFormFunctionality (selectedProject, changeForm, id){
         changeForm.addEventListener("submit", function(e) {
             e.preventDefault();
@@ -204,6 +212,7 @@ function start(){
             projectList[id].name = nameInput;
             closeChangeForm();
             selectedProject.querySelector(".project-name").textContent = projectList[id].name;
+            displayTasks();
         });
 
         changeForm.addEventListener("reset", function (e){
@@ -220,6 +229,7 @@ function start(){
         }
     }
 
+    //Performs the functionality when you select a project
     function selectProject(e){
         e.stopPropagation();
         let selected = document.querySelector(".selected-project");
@@ -233,6 +243,7 @@ function start(){
     }
 
     function displayTasks(){
+        localStorage.setItem('data', JSON.stringify(projectList));
         let taskContainer = document.querySelector(".task-container");
         taskContainer.textContent = ""
 
@@ -245,6 +256,8 @@ function start(){
         
         let taskList = projectData.taskList;
 
+
+        // Creates the DOM elements for the tasks and adds them to the DOM
         for (let i = 0; i < taskList.length; i++){
             let taskDiv =document.createElement("div");
             taskDiv.classList.add("task");
@@ -260,7 +273,6 @@ function start(){
             }
 
             completionCheckDiv.addEventListener("click", function(e){
-                //taskList[i].changeCompletedStatus();
                 taskList[i].completed = !taskList[i].completed;
                 if (taskList[i].completed){
                     
@@ -366,12 +378,15 @@ function start(){
         });
     }
 
+
+    // Performs the necessary form functionality
+    // The task parameter is the task that will be edited and if there is
+    // no parameter, then it will create a new task
     function taskFormFunction(task = undefined){
         let disableClicks = document.createElement("div");
         disableClicks.classList.add("disable-other-clicks");
         let newTaskForm = createNewTaskForm();
         disableClicks.appendChild(newTaskForm);
-        //taskContainer.appendChild(createNewTaskForm());
         document.querySelector("body").appendChild(disableClicks);
 
         document.querySelector(".new-task-form").addEventListener("submit", function(e){
@@ -405,6 +420,9 @@ function start(){
         formAndBackground.remove();
     }
 
+
+    // Creates the form that is used for tasks and returns it so the calling
+    // section can do the necessary additions to it
     function createNewTaskForm(){
         let newTaskForm = document.createElement("form");
         newTaskForm.classList.add("new-task-form");
@@ -486,11 +504,11 @@ function start(){
         newTaskForm.appendChild(dateLabel);
         newTaskForm.appendChild(taskDueDate);
         newTaskForm.appendChild(buttonDiv);
-        //newTaskForm.appendChild(submitNewTask);
-        //newTaskForm.appendChild(cancelNewTask);
 
         return newTaskForm;
     }
+
+    display();
 }
 
 export default start;
